@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "786642406100",
+    "project_id": "cosmorun-d5d84",
+    "storage_bucket": "cosmorun-d5d84.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:786642406100:android:aa69f357e9ae25ed804941",
+        "android_client_info": {
+          "package_name": "com.example.cosmorun"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAztFLu5Ldg9rbNuj2nVzYbWG6hDqONw8k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
