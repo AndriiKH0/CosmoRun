@@ -18,6 +18,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -27,30 +28,37 @@ import androidx.compose.ui.text.font.FontWeight
 fun FuelAndBoostIndicators(
     fuel: Float,
     superFuel: Float,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    startY: Float
 ) {
-    val screenWidth = LocalConfiguration.current.screenWidthDp.dp
+    val configuration = LocalConfiguration.current
+    val density = LocalDensity.current
+    val screenWidth = configuration.screenWidthDp.dp
+    val indicatorWidth = screenWidth * 0.4f
+    val textSize = (indicatorWidth.value * 0.05f).coerceIn(10f, 18f).sp
 
-
-    val indicatorWidth = (screenWidth * 0.4f)
-    val indicatorHeight = 12.dp
+    val indicatorHeight = indicatorWidth * 0.05f
 
     Column(
-        modifier = modifier.padding(16.dp),
+        modifier = modifier
+            .padding(start = 16.dp, top = with(density) { startY.toDp() }),
         horizontalAlignment = Alignment.Start
     ) {
-        Spacer(modifier = Modifier.height(20.dp))
+        Spacer(modifier = Modifier.height(30.dp))
+
 
         Text(
             text = "FUEL",
             style = TextStyle(
                 color = Color.White,
-                fontSize = 12.sp,
+                fontSize = textSize,
                 fontWeight = FontWeight.Bold,
                 fontFamily = FontFamily(Font(R.font.pixel))
             )
         )
         Spacer(modifier = Modifier.height(4.dp))
+
+
         Box(
             modifier = Modifier
                 .width(indicatorWidth)
@@ -76,12 +84,14 @@ fun FuelAndBoostIndicators(
             text = "BOOST",
             style = TextStyle(
                 color = Color.White,
-                fontSize = 12.sp,
+                fontSize = textSize,
                 fontWeight = FontWeight.Bold,
                 fontFamily = FontFamily(Font(R.font.pixel))
             )
         )
         Spacer(modifier = Modifier.height(4.dp))
+
+
         Box(
             modifier = Modifier
                 .width(indicatorWidth)
@@ -101,6 +111,7 @@ fun FuelAndBoostIndicators(
         }
     }
 }
+
 
 
 

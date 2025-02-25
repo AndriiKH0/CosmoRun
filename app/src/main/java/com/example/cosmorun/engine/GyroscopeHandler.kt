@@ -9,24 +9,26 @@ import android.hardware.SensorManager
 class GyroscopeHandler(context: Context) : SensorEventListener {
     private val sensorManager: SensorManager =
         context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
-    private val gyroscope: Sensor? =
-        sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE)
     private val accelerometer: Sensor? =
         sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
 
     var tiltX = 0f
-    var tiltY = 0f
-    private var _filteredTiltZ = 0f
+    private var _filteredTiltX = 0f
 
-    val filteredTiltZ: Float
-        get() = _filteredTiltZ
 
-    private val alpha = 0.1f
+    private val alpha = 0.08f
+
+
+    var sensitivity = 0.8f
+
+
+    private var neutralPositionX = 0f
+
+
+    val filteredTiltX: Float
+        get() = (_filteredTiltX - neutralPositionX) * sensitivity
 
     fun startListening() {
-        gyroscope?.let {
-            sensorManager.registerListener(this, it, SensorManager.SENSOR_DELAY_GAME)
-        }
         accelerometer?.let {
             sensorManager.registerListener(this, it, SensorManager.SENSOR_DELAY_GAME)
         }
@@ -36,22 +38,21 @@ class GyroscopeHandler(context: Context) : SensorEventListener {
         sensorManager.unregisterListener(this)
     }
 
+    fun calibrate() {
+        neutralPositionX = _filteredTiltX
+    }
+
     override fun onSensorChanged(event: SensorEvent?) {
         event?.let {
-            when (event.sensor.type) {
-                Sensor.TYPE_GYROSCOPE -> {
-                    _filteredTiltZ += alpha * (event.values[2] - _filteredTiltZ)
-                }
-                Sensor.TYPE_ACCELEROMETER -> {
-                    tiltX = event.values[0]
-                    tiltY = event.values[1]
-                }
+            if (event.sensor.type == Sensor.TYPE_ACCELEROMETER) {
+
+                tiltX = event.values[0]
+
+
+                _filteredTiltX = _filteredTiltX + alpha * (tiltX - _filteredTiltX)
             }
         }
     }
 
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {}
 }
-
-
-

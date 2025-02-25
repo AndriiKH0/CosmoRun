@@ -35,6 +35,11 @@ class MainActivity : ComponentActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        gyroscopeHandler.stopListening()
+        VideoPlayerSingleton.releasePlayer()
+
+        if (::gyroscopeHandler.isInitialized) {
+            gyroscopeHandler.stopListening()
+        }
     }
+
 }

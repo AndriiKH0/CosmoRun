@@ -10,8 +10,8 @@ enum class MeteorType {
 
 data class Meteor(
     var position: Offset,
-    val radius: Float,
-    val type: MeteorType,
+    var radius: Float,
+    var type: MeteorType,
     var speedX: Float = 0f,
     var speedY: Float = 0f,
     var rotationSpeed: Float = 0f,

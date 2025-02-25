@@ -51,7 +51,6 @@ dependencies {
     implementation ("androidx.compose.ui:ui-text:1.7.6")
     implementation ("io.coil-kt:coil-compose:2.2.2")
     implementation ("io.coil-kt:coil-gif:2.3.0")
-
     implementation(platform("com.google.firebase:firebase-bom:33.8.0"))
 
 
@@ -68,6 +67,7 @@ dependencies {
     implementation ("androidx.lifecycle:lifecycle-runtime-ktx:2.6.1")
     implementation(libs.androidx.foundation.layout.android)
     implementation(libs.androidx.foundation.layout.android)
+    implementation(libs.firebase.auth.ktx)
 
 
     debugImplementation ("androidx.compose.ui:ui-tooling:1.5.2")

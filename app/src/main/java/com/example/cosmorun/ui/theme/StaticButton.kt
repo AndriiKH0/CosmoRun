@@ -11,6 +11,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -24,6 +26,13 @@ fun StaticButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val configuration = LocalConfiguration.current
+    val density = LocalDensity.current
+
+
+    val screenWidthPx = with(density) { configuration.screenWidthDp.dp.toPx() }
+    val scaleFactor = (screenWidthPx / 1080f).toFloat()
+
     val pixelFont = FontFamily(
         Font(R.font.pixel, FontWeight.Normal)
     )
@@ -31,9 +40,9 @@ fun StaticButton(
     Box(
         contentAlignment = Alignment.Center,
         modifier = modifier
-            .padding(8.dp)
+            .padding((8f * scaleFactor).dp)
             .fillMaxWidth()
-            .height(48.dp)
+            .height((48f * scaleFactor).dp)
             .clickable(onClick = onClick)
             .background(Color.Transparent)
     ) {
@@ -42,10 +51,9 @@ fun StaticButton(
             style = TextStyle(
                 fontFamily = pixelFont,
                 fontWeight = FontWeight.Bold,
-                fontSize = 24.sp,
+                fontSize = (24f * scaleFactor).sp,
                 color = Color(0xFF00FFFF)
             )
         )
     }
 }
-

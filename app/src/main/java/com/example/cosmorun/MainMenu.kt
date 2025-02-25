@@ -11,6 +11,8 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -20,13 +22,14 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 
 @Composable
-fun MainMenu(
-    onStartGame: () -> Unit
-) {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-    ) {
+fun MainMenu(onStartGame: () -> Unit) {
+
+    val configuration = LocalConfiguration.current
+    val density = LocalDensity.current
+    val screenWidthPx = with(density) { configuration.screenWidthDp.dp.toPx() }
+    val screenHeightPx = with(density) { configuration.screenHeightDp.dp.toPx() }
+
+    Box(modifier = Modifier.fillMaxSize()) {
 
         Image(
             painter = painterResource(id = R.drawable.menu),
@@ -36,34 +39,29 @@ fun MainMenu(
         )
 
 
-        val meteorImages = listOf(
-            R.drawable.small,
-            R.drawable.medium,
-            R.drawable.big
-        )
-
-
         val meteorPositions = listOf(
-            Triple(R.drawable.small, Offset(100f, 250f), 50.dp),
-            Triple(R.drawable.small, Offset(300f, 400f), 50.dp),
-            Triple(R.drawable.medium, Offset(75f, 75f), 80.dp),
-            Triple(R.drawable.big, Offset(250f, 150f), 120.dp),
-            Triple(R.drawable.small, Offset(50f, 500f), 50.dp),
-            Triple(R.drawable.medium, Offset(70f, 620f), 80.dp)
+            Triple(R.drawable.small, Offset(0.1f * screenWidthPx, 0.2f * screenHeightPx), 50.dp),
+            Triple(R.drawable.small, Offset(0.7f * screenWidthPx, 0.5f * screenHeightPx), 50.dp),
+            Triple(R.drawable.medium, Offset(0.2f * screenWidthPx, 0.1f * screenHeightPx), 80.dp),
+            Triple(R.drawable.big, Offset(0.6f * screenWidthPx, 0.25f * screenHeightPx), 120.dp),
+            Triple(R.drawable.small, Offset(0.1f * screenWidthPx, 0.7f * screenHeightPx), 50.dp),
+            Triple(R.drawable.medium, Offset(0.15f * screenWidthPx, 0.85f * screenHeightPx), 80.dp)
         )
 
-        meteorPositions.forEach { (meteorRes, position, size) ->
+        meteorPositions.forEach { (meteorRes, positionPx, sizeDp) ->
             val randomRotation = remember { (0..360).random() }
-
             Box(
                 modifier = Modifier
-                    .size(size)
-                    .offset(x = position.x.dp, y = position.y.dp)
+                    .size(sizeDp)
+                    .offset(
+                        x = with(density) { positionPx.x.toDp() },
+                        y = with(density) { positionPx.y.toDp() }
+                    )
                     .rotate(randomRotation.toFloat())
             ) {
                 Image(
                     painter = painterResource(id = meteorRes),
-                    contentDescription = "Метеорит",
+                    contentDescription = "Meteor",
                     modifier = Modifier.fillMaxSize()
                 )
             }
@@ -72,7 +70,7 @@ fun MainMenu(
 
         Image(
             painter = painterResource(id = R.drawable.roketm),
-            contentDescription = "Ракета",
+            contentDescription = "Rocket",
             modifier = Modifier
                 .size(150.dp)
                 .align(Alignment.BottomEnd)
@@ -86,7 +84,6 @@ fun MainMenu(
             verticalArrangement = Arrangement.Center,
             modifier = Modifier.fillMaxSize()
         ) {
-
             Text(
                 text = "CosmoRun",
                 style = TextStyle(
@@ -101,8 +98,7 @@ fun MainMenu(
             )
             Spacer(modifier = Modifier.height(32.dp))
             Box(
-                modifier = Modifier
-                    .height(48.dp)
+                modifier = Modifier.height(48.dp)
             ) {
                 RetroButton(
                     text = "PRESS START",
@@ -112,6 +108,7 @@ fun MainMenu(
         }
     }
 }
+
 
 
 

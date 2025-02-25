@@ -8,20 +8,27 @@ import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asAndroidBitmap
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.graphics.nativeCanvas
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.imageResource
+import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
 
 @Composable
-fun RocketAnimation(lives: Int, shipX: Float, shipY: Float, scaleFactor: Float = 1f) {
+fun RocketAnimation(lives: Int, shipX: Float, shipY: Float, baseScale: Float = 2.3f) {
 
     val rocketSprite = ImageBitmap.imageResource(id = R.drawable.roket13)
 
+    val configuration = LocalConfiguration.current
+    val density = LocalDensity.current
 
-    val frameWidth = 128
-    val frameHeight = 128
+    val screenWidthPx = with(density) { configuration.screenWidthDp.dp.toPx() }
+    val scaleFactor = screenWidthPx / 1080f
+
+    val frameWidth = (128 * scaleFactor).toInt()
+    val frameHeight = (128 * scaleFactor).toInt()
     val totalFrames = 7
     val frameDuration = 200L
-
 
     val row = when {
         lives >= 3 -> 0
@@ -30,10 +37,7 @@ fun RocketAnimation(lives: Int, shipX: Float, shipY: Float, scaleFactor: Float =
         else -> 3
     }
 
-
-
     var currentFrame by remember { mutableStateOf(0) }
-
 
     LaunchedEffect(row) {
         while (true) {
@@ -42,21 +46,17 @@ fun RocketAnimation(lives: Int, shipX: Float, shipY: Float, scaleFactor: Float =
         }
     }
 
-
     Canvas(modifier = Modifier.fillMaxSize()) {
         drawIntoCanvas { canvas ->
-
             val srcRect = android.graphics.Rect(
-                currentFrame * frameWidth,
-                row * frameHeight,
-                (currentFrame + 1) * frameWidth,
-                (row + 1) * frameHeight
+                currentFrame * 128,
+                row * 128,
+                (currentFrame + 1) * 128,
+                (row + 1) * 128
             )
 
-
-            val scaledWidth = (frameWidth * scaleFactor).toInt()
-            val scaledHeight = (frameHeight * scaleFactor).toInt()
-
+            val scaledWidth = (frameWidth * baseScale).toInt()
+            val scaledHeight = (frameHeight * baseScale).toInt()
 
             val dstRect = android.graphics.Rect(
                 (shipX - scaledWidth / 2).toInt(),
@@ -65,9 +65,7 @@ fun RocketAnimation(lives: Int, shipX: Float, shipY: Float, scaleFactor: Float =
                 (shipY + scaledHeight / 2).toInt()
             )
 
-
             val androidBitmap = rocketSprite.asAndroidBitmap()
-
 
             canvas.nativeCanvas.drawBitmap(
                 androidBitmap,
@@ -78,7 +76,3 @@ fun RocketAnimation(lives: Int, shipX: Float, shipY: Float, scaleFactor: Float =
         }
     }
 }
-
-
-
-

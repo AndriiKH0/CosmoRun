@@ -10,18 +10,33 @@ import androidx.compose.runtime.Composable
 import android.content.Context
 import com.google.android.exoplayer2.ui.AspectRatioFrameLayout
 
+
+object VideoPlayerSingleton {
+    private var exoPlayer: ExoPlayer? = null
+
+    fun getPlayer(context: Context): ExoPlayer {
+        if (exoPlayer == null) {
+            exoPlayer = ExoPlayer.Builder(context).build().apply {
+                val mediaItem = MediaItem.fromUri("file:///android_asset/3.mp4")
+                setMediaItem(mediaItem)
+                prepare()
+                playWhenReady = true
+                repeatMode = ExoPlayer.REPEAT_MODE_ONE
+            }
+        }
+        return exoPlayer!!
+    }
+
+    fun releasePlayer() {
+        exoPlayer?.release()
+        exoPlayer = null
+    }
+}
+
 @Composable
 fun VideoBackgroud(context: Context, isBoosting: Boolean) {
 
-    val exoPlayer = remember {
-        ExoPlayer.Builder(context).build().apply {
-            val mediaItem = MediaItem.fromUri("file:///android_asset/3.mp4")
-            setMediaItem(mediaItem)
-            prepare()
-            playWhenReady = true
-            repeatMode = ExoPlayer.REPEAT_MODE_ONE
-        }
-    }
+    val exoPlayer = remember { VideoPlayerSingleton.getPlayer(context) }
 
 
     LaunchedEffect(isBoosting) {
@@ -33,12 +48,11 @@ fun VideoBackgroud(context: Context, isBoosting: Boolean) {
     }
 
 
-    DisposableEffect(exoPlayer) {
+    DisposableEffect(Unit) {
         onDispose {
-            exoPlayer.release()
+
         }
     }
-
 
     AndroidView(
         factory = {
@@ -51,4 +65,3 @@ fun VideoBackgroud(context: Context, isBoosting: Boolean) {
         modifier = Modifier.fillMaxSize()
     )
 }
-
