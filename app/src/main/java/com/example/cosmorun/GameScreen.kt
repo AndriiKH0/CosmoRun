@@ -409,7 +409,7 @@ fun GameScreen(gyroscopeHandler: GyroscopeHandler, context: Context, onExitToMen
             val tilt = gyroscopeHandler.filteredTiltX
 
 
-            shipX -= tilt * 6f
+            shipX -= tilt * 6f * scaleFactor
 
 
             shipX = when {
