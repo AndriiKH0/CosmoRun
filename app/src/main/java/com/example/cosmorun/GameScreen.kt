@@ -51,9 +51,6 @@ fun GameScreen(gyroscopeHandler: GyroscopeHandler, context: Context, onExitToMen
     val maxFuel = 100f
     var fuel by remember { mutableStateOf(100f) }
     var superFuel by remember { mutableStateOf(0f) }
-    val database =
-        FirebaseDatabase.getInstance("https://cosmorun-d5d84-default-rtdb.europe-west1.firebasedatabase.app")
-    val highScoreRef = database.getReference("high-score")
     val maxSuperFuel = 100f
     var isBoosting by remember { mutableStateOf(false) }
     var isGameOver by remember { mutableStateOf(false) }
@@ -102,27 +99,6 @@ fun GameScreen(gyroscopeHandler: GyroscopeHandler, context: Context, onExitToMen
         }
     }
 
-
-
-
-
-
-    highScoreRef.addValueEventListener(object : ValueEventListener {
-        override fun onDataChange(snapshot: DataSnapshot) {
-            val newHighScore = snapshot.getValue(Int::class.java) ?: 0
-            currentHighScore = newHighScore
-        }
-
-        override fun onCancelled(error: DatabaseError) {
-            println("Error: ${error.message}")
-        }
-    })
-
-
-
-
-
-
     VideoBackgroud(context = context, isBoosting = isBoosting)
 
 
@@ -169,17 +145,6 @@ fun GameScreen(gyroscopeHandler: GyroscopeHandler, context: Context, onExitToMen
     }
 
 // Poziom trudnosci -------------------------------------------------------------------------------------
-    LaunchedEffect(isGameOver) {
-        if (!isGameOver) {
-            while (true) {
-                delay(20000)
-                gameSpeed += 0.5f
-                spawnInterval = max(500L, spawnInterval - 100L)
-                delay(5000)
-            }
-        }
-    }
-
 
     LaunchedEffect(isGameOver) {
         if (!isGameOver) {
